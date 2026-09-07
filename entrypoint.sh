@@ -46,6 +46,80 @@ openbox &
 # Start VNC server (port 5900)
 x11vnc -display :99 -forever -shared -rfbport 5900 -nopw -bg -o /tmp/x11vnc.log
 
+# Setup noVNC web console redirect and DOM readiness fix
+rm -f /usr/share/novnc/index.html 2>/dev/null || true
+cat << "EOF" > /usr/share/novnc/index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="0; url=vnc.html?autoconnect=true&resize=scale">
+    <title>BBS Door Server Console</title>
+</head>
+<body style="background-color: #111; color: #aaa; font-family: monospace; padding: 20px;">
+    Redirecting to <a href="vnc.html?autoconnect=true&resize=scale" style="color: #00ff00;">noVNC Web Console</a>...
+    <script>
+        window.location.replace("vnc.html?autoconnect=true&resize=scale");
+    </script>
+</body>
+</html>
+EOF
+
+python3 -c '
+ui_path = "/usr/share/novnc/app/ui.js"
+try:
+    with open(ui_path, "r") as f:
+        content = f.read()
+
+    changed = False
+    proxy_snippet = """// Safe element proxy fallback to prevent null addEventListener crashes
+if (typeof document !== "undefined" && !document._safeGetElementById) {
+    document._safeGetElementById = document.getElementById.bind(document);
+    const _nullProxy = new Proxy({}, {
+        get: (target, prop) => {
+            if (prop === "addEventListener" || prop === "removeEventListener") return () => {};
+            if (prop === "classList") return { add: () => {}, remove: () => {}, contains: () => false, toggle: () => {} };
+            if (prop === "style") return {};
+            if (prop === "setAttribute" || prop === "removeAttribute") return () => {};
+            if (prop === "getAttribute") return () => null;
+            return undefined;
+        }
+    });
+    document.getElementById = (id) => document._safeGetElementById(id) || _nullProxy;
+}
+"""
+    if "document._safeGetElementById" not in content:
+        content = proxy_snippet + content
+        changed = True
+
+    old_prime = """            if (document.readyState === "interactive" || document.readyState === "complete") {
+                return UI.start();
+            }
+
+            return new Promise((resolve, reject) => {
+                document.addEventListener(\x27DOMContentLoaded\x27, () => UI.start().then(resolve).catch(reject));
+            });"""
+
+    new_prime = """            if (document.readyState === "complete") {
+                return UI.start();
+            }
+
+            return new Promise((resolve, reject) => {
+                window.addEventListener(\x27load\x27, () => UI.start().then(resolve).catch(reject));
+            });"""
+
+    if old_prime in content:
+        content = content.replace(old_prime, new_prime)
+        changed = True
+
+    if changed:
+        with open(ui_path, "w") as f:
+            f.write(content)
+        print("[entrypoint] Patched noVNC ui.js successfully")
+except Exception as e:
+    print("[entrypoint] Warning checking noVNC patch:", e)
+'
+
 # Start noVNC WebSocket proxy (port 6080)
 websockify --web /usr/share/novnc 6080 localhost:5900 &
 
