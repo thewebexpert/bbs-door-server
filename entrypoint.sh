@@ -38,7 +38,8 @@ cat << "EOF" > /root/.config/openbox/menu.xml
   </item>
 </menu>
 </openbox_menu>
-EOF
+mkdir -p /var/lib/openbox
+ln -sf /root/.config/openbox/menu.xml /var/lib/openbox/debian-menu.xml 2>/dev/null || true
 
 openbox &
 
