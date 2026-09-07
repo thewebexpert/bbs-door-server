@@ -1,0 +1,14 @@
+node_modules/
+.DS_Store
+*.log
+BNULOG.TXT
+*_OUT.TXT
+OUT.TXT
+test.def
+
+# Node temporary dropfiles
+dosbox/drive/nodes/node*/*
+!dosbox/drive/nodes/node*/.gitkeep
+
+# Local environment overrides
+.env

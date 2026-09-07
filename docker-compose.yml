@@ -1,0 +1,19 @@
+services:
+  bbs-door-server:
+    build: .
+    container_name: bbs-door-server
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ:-America/New_York}
+    ports:
+      # RLogin port for BBS connections (Standard 513)
+      - "${DOOR_PORT:-513}:513"
+      # noVNC Web Management Desktop (open in your browser)
+      - "${VNC_WEB_PORT:-6080}:6080"
+      # Debug / interactive test console (connect via telnet)
+      - "${DEBUG_PORT:-1234}:1234"
+    volumes:
+      # Mount the door games directory so games, installations, and data persist
+      - ./dosbox/drive/doors:/app/dosbox/drive/doors
+      # Mount configuration file so module changes take effect immediately
+      - ./config.js:/app/config.js
