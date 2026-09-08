@@ -49,6 +49,7 @@ x11vnc -display :99 -forever -shared -rfbport 5900 -nopw -bg -o /tmp/x11vnc.log
 
 # Setup noVNC web console redirect and DOM readiness fix
 rm -f /usr/share/novnc/index.html 2>/dev/null || true
+echo '{"name": "noVNC", "version": "1.3.0"}' > /usr/share/novnc/package.json 2>/dev/null || true
 cat << "EOF" > /usr/share/novnc/index.html
 <!DOCTYPE html>
 <html>
