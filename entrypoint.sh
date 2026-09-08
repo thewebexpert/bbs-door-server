@@ -155,6 +155,17 @@ try:
     html = html.replace("src=\"app/error-handler.js\"", "src=\"app/error-handler.js?v=2.0.0\"")
     html = html.replace("src=\"app/ui.js\"", "src=\"app/ui.js?v=2.0.0\"")
 
+    cleanup_script = """<script>
+    if (\x27serviceWorker\x27 in navigator) {
+        navigator.serviceWorker.getRegistrations().then(r => r.forEach(x => x.unregister()));
+    }
+    if (\x27caches\x27 in window) {
+        caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+    }
+    </script>"""
+    if "serviceWorker" not in html:
+        html = html.replace("<head>", "<head>\n    " + cleanup_script, 1)
+
     # Add compatibility stubs for older cached scripts
     stubs = """<body>
     <!-- Legacy compatibility elements for cached noVNC scripts -->
@@ -173,6 +184,27 @@ try:
     print("[entrypoint] Patched vnc.html with compatibility stubs and cache-busting")
 except Exception as e:
     print("[entrypoint] Warning patching vnc.html:", e)
+'
+
+# Recursively cache-bust all JS imports in /usr/share/novnc so dependencies are never served from browser disk cache
+python3 -c '
+import os, re
+novnc_dir = "/usr/share/novnc"
+try:
+    for root, dirs, files in os.walk(novnc_dir):
+        for f in files:
+            if f.endswith(".js"):
+                path = os.path.join(root, f)
+                with open(path, "r", encoding="utf-8", errors="ignore") as fh:
+                    content = fh.read()
+                new_content = re.sub(r"""from\s+([\"\x27])(\.{1,2}/[^\s\"\x27]+\.js)([\"\x27])""", r"""from \1\2?v=2.0.0\3""", content)
+                new_content = re.sub(r"""import\s+([\"\x27])(\.{1,2}/[^\s\"\x27]+\.js)([\"\x27])""", r"""import \1\2?v=2.0.0\3""", new_content)
+                if new_content != content:
+                    with open(path, "w", encoding="utf-8") as fh:
+                        fh.write(new_content)
+    print("[entrypoint] Patched all JS imports with cache-busting version query")
+except Exception as e:
+    print("[entrypoint] Warning updating JS imports:", e)
 '
 
 # Start noVNC WebSocket proxy (port 6080)
