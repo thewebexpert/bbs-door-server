@@ -121,6 +121,60 @@ except Exception as e:
     print("[entrypoint] Warning checking noVNC patch:", e)
 '
 
+# Force HTTP no-cache headers in websockify so browsers never serve stale cached scripts
+python3 -c '
+path = "/usr/lib/python3/dist-packages/websockify/websockifyserver.py"
+try:
+    with open(path, "r") as f:
+        code = f.read()
+    target = "class WebSockifyRequestHandler(WebSocketRequestHandlerMixIn, SimpleHTTPRequestHandler):"
+    replacement = target + """
+    def end_headers(self):
+        self.send_header(\x27Cache-Control\x27, \x27no-store, no-cache, must-revalidate, max-age=0\x27)
+        self.send_header(\x27Pragma\x27, \x27no-cache\x27)
+        self.send_header(\x27Expires\x27, \x270\x27)
+        super().end_headers()
+"""
+    if target in code and "def end_headers(self):" not in code:
+        code = code.replace(target, replacement, 1)
+        with open(path, "w") as f:
+            f.write(code)
+        print("[entrypoint] Patched websockifyserver.py with no-cache headers")
+except Exception as e:
+    print("[entrypoint] Warning patching websockifyserver.py:", e)
+'
+
+# Patch vnc.html with cache-busting and legacy compatibility stubs for cached scripts
+python3 -c '
+path = "/usr/share/novnc/vnc.html"
+try:
+    with open(path, "r") as f:
+        html = f.read()
+
+    # Cache-bust script references
+    html = html.replace("src=\"app/error-handler.js\"", "src=\"app/error-handler.js?v=2.0.0\"")
+    html = html.replace("src=\"app/ui.js\"", "src=\"app/ui.js?v=2.0.0\"")
+
+    # Add compatibility stubs for older cached scripts
+    stubs = """<body>
+    <!-- Legacy compatibility elements for cached noVNC scripts -->
+    <div style="display:none;" aria-hidden="true">
+        <div id="noVNC_mouse_button0"></div>
+        <div id="noVNC_mouse_button1"></div>
+        <div id="noVNC_mouse_button2"></div>
+        <div id="noVNC_mouse_button4"></div>
+    </div>"""
+
+    if "noVNC_mouse_button0" not in html:
+        html = html.replace("<body>", stubs, 1)
+
+    with open(path, "w") as f:
+        f.write(html)
+    print("[entrypoint] Patched vnc.html with compatibility stubs and cache-busting")
+except Exception as e:
+    print("[entrypoint] Warning patching vnc.html:", e)
+'
+
 # Start noVNC WebSocket proxy (port 6080)
 websockify --web /usr/share/novnc 6080 localhost:5900 &
 
