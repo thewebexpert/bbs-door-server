@@ -76,6 +76,18 @@ module.exports = {
     doorCmd: 'CALL mudcfg.bat',
     dropFileFormat: 'DorInfo',
     multiNode: true
+  },
+  {
+    name: 'USURPER',
+    doorCmd: 'CALL usurper.bat',
+    dropFileFormat: 'DoorSys',
+    multiNode: true
+  },
+  {
+    name: 'DREDD',
+    doorCmd: 'CALL dredd.bat',
+    dropFileFormat: 'DoorSys',
+    multiNode: true
   }
   ]
 }

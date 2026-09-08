@@ -10,37 +10,10 @@ export TERM=xterm
 
 sleep 1
 
-# Setup Openbox Sysop Menu
-mkdir -p /root/.config/openbox
-cat << "EOF" > /root/.config/openbox/menu.xml
-<?xml version="1.0" encoding="UTF-8"?>
-<openbox_menu xmlns="http://openbox.org/3.4/menu">
-<menu id="root-menu" label="Sysop Menu">
-  <item label="DOSBox Prompt (C:\>)">
-    <action name="Execute"><command>dosbox -conf /app/dosbox/dosbox.conf</command></action>
-  </item>
-  <separator />
-  <item label="Operation Overkill Setup (OOSETUP)">
-    <action name="Execute"><command>dosbox -conf /app/dosbox/dosbox.conf -c "CD \doors\oo2" -c "oosetup.exe"</command></action>
-  </item>
-  <item label="TradeWars TEDIT">
-    <action name="Execute"><command>dosbox -conf /app/dosbox/dosbox.conf -c "CD \doors\tw2002" -c "tedit.exe"</command></action>
-  </item>
-  <item label="LORD Configuration (LORDCFG)">
-    <action name="Execute"><command>dosbox -conf /app/dosbox/dosbox.conf -c "CD \doors\lord" -c "lordcfg.exe"</command></action>
-  </item>
-  <item label="DoorMUD Configuration (MUDCFG)">
-    <action name="Execute"><command>dosbox -conf /app/dosbox/dosbox.conf -c "CD \doors\doormud" -c "dmud.exe -l"</command></action>
-  </item>
-  <separator />
-  <item label="Linux Terminal (xterm)">
-    <action name="Execute"><command>xterm -geometry 100x30 -bg black -fg white</command></action>
-  </item>
-</menu>
-</openbox_menu>
-EOF
-mkdir -p /var/lib/openbox
-ln -sf /root/.config/openbox/menu.xml /var/lib/openbox/debian-menu.xml 2>/dev/null || true
+# Setup Openbox Sysop Menu dynamically based on installed doors
+if [ -x /app/scripts/generate-menu.sh ]; then
+  /app/scripts/generate-menu.sh
+fi
 
 openbox &
 

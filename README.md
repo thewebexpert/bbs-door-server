@@ -50,15 +50,51 @@ Open **`http://localhost:6080/`** in any web browser. You will be greeted by an 
 Right-click anywhere on the desktop background to open the Openbox **Sysop Menu**:
 
 * **DOSBox Prompt (`C:\>`)**: Opens an interactive DOSBox session with `C:\` pre-mounted to `/app/dosbox/drive`. Use this to run installers, create characters, or test executables.
-* **TradeWars TEDIT**: Launches the TradeWars 2002 Sysop editor and universe configurator.
-* **LORD Configuration (LORDCFG)**: Launches the Legend of the Red Dragon configuration editor.
-* **Operation Overkill Setup (OOSETUP)**: Launches the OO2 game configuration utility.
-* **DoorMUD Configuration (MUDCFG)**: Launches the DoorMUD local maintenance editor (`dmud.exe -l`).
+* **Dynamic Door Management**:
+  * Uninstalled open-source doors show an **Install <Game>** option.
+  * Once installed, the menu **dynamically updates** to replace the installer with **Configure <Game>** (launching its setup editor in DOSBox) and **Run Locally**!
 * **Linux Terminal (xterm)**: Spawns an additional Linux terminal window for downloading archives, managing files, and checking logs.
 
 ---
 
-## How to Add a New DOS Door Game
+## Installing Open-Source BBS Doors
+
+The door server comes pre-configured with launcher batch scripts and dropfile integrations for official open-source BBS doors. To avoid forcing unneeded software onto your system, these doors are not pre-installed, but can be added in seconds.
+
+### Supported Open-Source Doors
+1. **Usurper v0.20e** (GNU General Public License v2)
+   - Legendary fantasy RPG door by Jakob Dangarden, ported and maintained by [Rick Parrish](https://github.com/rickparrish/Usurper).
+   - Features dungeon crawling, monster slaying, player combat, gods, and marriages.
+2. **Judge Dredd Door** (MIT License)
+   - Modern L.O.R.D.-style Mega-City One RPG door created by [GrumpyGrendil](https://github.com/GrumpyGrendil/JudgeDredd) with Scott Baker's DDPlus 7.1 DoorKit.
+   - Fight perps, level up your Judge, patrol the sectors, and upgrade equipment.
+
+### Option A: 1-Click Installation from Web Desktop (noVNC)
+1. Open the noVNC desktop at `http://localhost:6080/`.
+2. Right-click anywhere on the desktop background.
+3. Click **Install Usurper (GPL)** or **Install Judge Dredd (MIT)**.
+4. A terminal window will open, download the official release directly from GitHub, and set up all required directories.
+5. Once complete, right-clicking the desktop will now show:
+   * **Usurper** ➔ **Configure Usurper (Editor)** or **Run Usurper Locally**
+   * **Judge Dredd** ➔ **Edit Config (JUDGE.CFG)** or **Run Judge Dredd Locally**
+
+### Option B: Command-Line Installation
+You can also run the installer script directly on the host or inside the container:
+
+```bash
+# Install Usurper only:
+./install-doors.sh usurper
+
+# Install Judge Dredd only:
+./install-doors.sh dredd
+
+# Install all available open-source doors:
+./install-doors.sh all
+```
+
+---
+
+## How to Add Custom DOS Door Games
 
 Here is a complete, step-by-step guide to installing a new door game using the web interface:
 
