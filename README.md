@@ -53,6 +53,7 @@ Right-click anywhere on the desktop background to open the Openbox **Sysop Menu*
 * **Dynamic Door Management**:
   * Uninstalled open-source doors show an **Install <Game>** option.
   * Once installed, the menu **dynamically updates** to replace the installer with **Configure <Game>** (launching its setup editor in DOSBox) and **Run Locally**!
+* **List RLogin Entrypoints (BBS Info)**: Opens a formatted status dashboard showing all doors, installation status, ports, and copy-paste Synchronet / SyncTERM configuration strings.
 * **Linux Terminal (xterm)**: Spawns an additional Linux terminal window for downloading archives, managing files, and checking logs.
 
 ---
@@ -91,6 +92,27 @@ You can also run the installer script directly on the host or inside the contain
 # Install all available open-source doors:
 ./install-doors.sh all
 ```
+
+---
+
+## Viewing RLogin Entrypoints & BBS Configuration
+
+To see all configured door games, their RLogin server names, installation status, and copy-paste BBS setup lines:
+
+### From the Web Desktop
+* Right-click the desktop and click **List RLogin Entrypoints (BBS Info)**.
+
+### From the Terminal
+* Run the helper script:
+  ```bash
+  ./list-doors.sh
+  ```
+
+This displays a live dashboard and allows you to test any door instantly:
+* **Internal RLogin**: `door-server:513`
+* **External RLogin**: `localhost:5130`
+* **Synchronet External Program Command**: `?rlogin -p 513 door-server %u <DOOR_NAME>`
+* **SyncTERM**: Host: `localhost` | Port: `5130` | User: `<DOOR_NAME>`
 
 ---
 

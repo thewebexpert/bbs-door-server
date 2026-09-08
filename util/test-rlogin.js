@@ -1,16 +1,20 @@
 const net = require('net')
 
-let client = net.connect({port: 513}, () => {
+const door = (process.argv[2] || 'LORD').toUpperCase()
+const user = process.argv[3] || 'Sysop'
+const port = parseInt(process.env.RLOGIN_PORT || '513', 10)
+const host = process.env.RLOGIN_HOST || '127.0.0.1'
+
+let client = net.connect({port, host}, () => {
   client.setEncoding('binary')
   client.on('data', data => {
-    // this.out(data, true)
     process.stdout.write(data, 'binary')
   })
 })
 
 client.on('connect', () => {
-  console.log(' -- client connected')
-  client.write('TestUser\0LOD\0ansi', 'binary')
+  console.log(` -- connected to ${host}:${port} launching ${door} for ${user}`)
+  client.write(`${user}\0${door}\0xterm/38400\0`, 'binary')
 })
 
 client.on('close', () => {

@@ -91,6 +91,9 @@ fi
 
 cat << "XML" >> "$MENU_FILE"
   <separator />
+  <item label="List RLogin Entrypoints (BBS Info)">
+    <action name="Execute"><command>xterm -T "RLogin Entrypoints &amp; BBS Setup" -geometry 105x35 -bg black -fg white -e /app/scripts/list-rlogin.sh</command></action>
+  </item>
   <item label="Linux Terminal (xterm)">
     <action name="Execute"><command>xterm -geometry 100x30 -bg black -fg white</command></action>
   </item>
