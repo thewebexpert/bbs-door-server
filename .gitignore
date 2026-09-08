@@ -10,5 +10,12 @@ test.def
 dosbox/drive/nodes/node*/*
 !dosbox/drive/nodes/node*/.gitkeep
 
+# Installed door games (binaries, player data, logs)
+# Only keep launcher scripts and folder placeholder
+dosbox/drive/doors/*
+!dosbox/drive/doors/bin/
+!dosbox/drive/doors/bin/**
+!dosbox/drive/doors/.gitkeep
+
 # Local environment overrides
 .env
