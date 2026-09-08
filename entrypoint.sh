@@ -67,7 +67,7 @@ cat << "EOF" > /usr/share/novnc/index.html
 </html>
 EOF
 
-python3 -c '
+python3 << "EOF"
 ui_path = "/usr/share/novnc/app/ui.js"
 try:
     with open(ui_path, "r") as f:
@@ -99,7 +99,7 @@ if (typeof document !== "undefined" && !document._safeGetElementById) {
             }
 
             return new Promise((resolve, reject) => {
-                document.addEventListener(\x27DOMContentLoaded\x27, () => UI.start().then(resolve).catch(reject));
+                document.addEventListener('DOMContentLoaded', () => UI.start().then(resolve).catch(reject));
             });"""
 
     new_prime = """            if (document.readyState === "complete") {
@@ -107,11 +107,32 @@ if (typeof document !== "undefined" && !document._safeGetElementById) {
             }
 
             return new Promise((resolve, reject) => {
-                window.addEventListener(\x27load\x27, () => UI.start().then(resolve).catch(reject));
+                window.addEventListener('load', () => UI.start().then(resolve).catch(reject));
             });"""
 
     if old_prime in content:
         content = content.replace(old_prime, new_prime)
+        changed = True
+
+    fetch_target = """        fetch('./package.json')
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error("" + response.status + " " + response.statusText);
+                }
+                return response.json();
+            })
+            .then((packageInfo) => {
+                Array.from(document.getElementsByClassName('noVNC_version')).forEach(el => el.innerText = packageInfo.version);
+            })
+            .catch((err) => {
+                Log.Error("Couldn't fetch package.json: " + err);
+                Array.from(document.getElementsByClassName('noVNC_version_wrapper'))
+                    .concat(Array.from(document.getElementsByClassName('noVNC_version_separator')))
+                    .forEach(el => el.style.display = 'none');
+            });"""
+    fetch_replacement = """        Array.from(document.getElementsByClassName('noVNC_version')).forEach(el => el.innerText = '1.3.0');"""
+    if fetch_target in content:
+        content = content.replace(fetch_target, fetch_replacement)
         changed = True
 
     if changed:
@@ -120,7 +141,7 @@ if (typeof document !== "undefined" && !document._safeGetElementById) {
         print("[entrypoint] Patched noVNC ui.js successfully")
 except Exception as e:
     print("[entrypoint] Warning checking noVNC patch:", e)
-'
+EOF
 
 # Force HTTP no-cache headers in websockify so browsers never serve stale cached scripts
 python3 -c '
