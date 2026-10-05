@@ -46,6 +46,9 @@ if [ -d "$DOORS_DIR/dredd" ] || [ -d "$DOORS_DIR/DREDD" ]; then
     <item label="Edit Config (JUDGE.CFG)">
       <action name="Execute"><command>xterm -T "Judge Dredd Config" -geometry 90x25 -bg black -fg white -e nano /app/dosbox/drive/doors/dredd/JUDGE.CFG</command></action>
     </item>
+    <item label="Edit Control File (JUDGE.CTL)">
+      <action name="Execute"><command>xterm -T "Judge Dredd Control File" -geometry 90x25 -bg black -fg white -e nano /app/dosbox/drive/doors/dredd/JUDGE.CTL</command></action>
+    </item>
   </menu>
 XML
 else

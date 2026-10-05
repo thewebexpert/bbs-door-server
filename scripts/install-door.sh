@@ -61,6 +61,37 @@ install_dredd() {
   cp -r "$TMP_DIR"/JudgeDredd-main/GAME/* "$DEST/"
   rm -rf "$TMP_DIR"
   
+  echo "    Configuring JUDGE.CTL for FOSSIL 38400 operation..."
+  if [ -f "$DEST/JUDGE.CTL" ]; then
+    sed -i.bak \
+      -e 's/^[; ]*COMPORT.*/COMPORT 1/' \
+      -e 's/^[; ]*FOSSIL/FOSSIL/' \
+      -e 's/^[; ]*LOCKBAUD.*/LOCKBAUD 38400/' \
+      -e 's/^SYSOPFIRST .*/SYSOPFIRST Derek/' \
+      -e 's/^SYSOPLAST .*/SYSOPLAST Bird/' \
+      -e 's/^BBSNAME .*/BBSNAME The Adventure BBS/' \
+      "$DEST/JUDGE.CTL" && rm -f "$DEST/JUDGE.CTL.bak"
+  fi
+
+  BIN_DEST="$DOORS_DIR/bin/dredd.bat"
+  if [ ! -f "$BIN_DEST" ]; then
+    echo "    Creating dredd.bat launcher..."
+    mkdir -p "$DOORS_DIR/bin"
+    cat << 'EOF' > "$BIN_DEST"
+@echo off
+c:
+if "%NODE%"=="" set NODE=1
+if not "%1"=="" set NODE=%1
+bnu /c /l0:38400,8n1 /w0- /h0-
+cd \doors\dredd
+if exist c:\nodes\node%NODE%\door.sys copy c:\nodes\node%NODE%\door.sys c:\doors\dredd\door.sys > nul
+if exist c:\nodes\node%NODE%\DOOR.SYS copy c:\nodes\node%NODE%\DOOR.SYS c:\doors\dredd\DOOR.SYS > nul
+dredd /Pc:\nodes\node%NODE%\
+exit
+EOF
+    chmod 755 "$BIN_DEST" 2>/dev/null || true
+  fi
+
   chmod -R 777 "$DEST" 2>/dev/null || true
   echo "    [SUCCESS] Judge Dredd installed to $DEST"
 }
