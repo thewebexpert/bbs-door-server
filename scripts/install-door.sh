@@ -61,6 +61,22 @@ install_dredd() {
   cp -r "$TMP_DIR"/JudgeDredd-main/GAME/* "$DEST/"
   rm -rf "$TMP_DIR"
   
+  echo "    Patching ANSI screens with cursor home sequence for VT100/xterm compatibility..."
+  python3 -c "
+import os
+ans_dir = '$DEST/ANS'
+if os.path.isdir(ans_dir):
+    home_seq = b'\x1b[1;1H'
+    for f in os.listdir(ans_dir):
+        if f.upper().endswith('.ANS'):
+            p = os.path.join(ans_dir, f)
+            with open(p, 'rb') as fh:
+                data = fh.read()
+            if not data.startswith(b'\x1b[H') and not data.startswith(b'\x1b[1;1H'):
+                with open(p, 'wb') as fh:
+                    fh.write(home_seq + data)
+"
+
   echo "    Configuring JUDGE.CTL for FOSSIL 38400 operation..."
   if [ -f "$DEST/JUDGE.CTL" ]; then
     sed -i.bak \
