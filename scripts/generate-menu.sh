@@ -59,6 +59,23 @@ else
 XML
 fi
 
+# --- PIMPWARS ---
+if [ -d "$DOORS_DIR/pimpwars" ] || [ -d "$DOORS_DIR/PIMPWARS" ]; then
+  cat << "XML" >> "$MENU_FILE"
+  <menu id="menu-pimpwars" label="PimpWars">
+    <item label="Run PimpWars Locally">
+      <action name="Execute"><command>dosbox -conf /app/dosbox/dosbox.conf -c "CD \doors\pimpwars" -c "pimpwars.exe c:\nodes\node1\door.sys 1"</command></action>
+    </item>
+  </menu>
+XML
+else
+  cat << "XML" >> "$MENU_FILE"
+  <item label="Install PimpWars (Freeware)">
+    <action name="Execute"><command>xterm -T "Installing PimpWars" -geometry 90x25 -bg black -fg green -e /app/scripts/install-door.sh pimpwars</command></action>
+  </item>
+XML
+fi
+
 # --- CLASSIC BBS DOORS (shown if installed) ---
 if [ -d "$DOORS_DIR/tw2002" ] || [ -d "$DOORS_DIR/TW2002" ]; then
   cat << "XML" >> "$MENU_FILE"

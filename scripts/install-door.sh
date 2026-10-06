@@ -112,6 +112,50 @@ EOF
   echo "    [SUCCESS] Judge Dredd installed to $DEST"
 }
 
+install_pimpwars() {
+  echo ""
+  echo "--> Installing PimpWars v1.52 DOS..."
+  echo "    Source: https://archive.org/download/msdos_PimpWars_1990/PimpWars_1990.zip"
+  DEST="$DOORS_DIR/pimpwars"
+  mkdir -p "$DEST"
+  TMP_ZIP="/tmp/pimpwars_$$.zip"
+
+  echo "    Downloading release archive..."
+  curl -sSL "https://archive.org/download/msdos_PimpWars_1990/PimpWars_1990.zip" -o "$TMP_ZIP"
+
+  echo "    Extracting game files..."
+  if command -v unzip >/dev/null 2>&1; then
+    unzip -qo "$TMP_ZIP" -d "$DEST"
+  else
+    python3 -m zipfile -e "$TMP_ZIP" "$DEST"
+  fi
+  rm -f "$TMP_ZIP"
+
+  BIN_DEST="$DOORS_DIR/bin/pimpwars.bat"
+  if [ ! -f "$BIN_DEST" ]; then
+    echo "    Creating pimpwars.bat launcher..."
+    mkdir -p "$DOORS_DIR/bin"
+    cat << 'EOF' > "$BIN_DEST"
+@echo off
+c:
+if "%NODE%"=="" set NODE=1
+if not "%1"=="" set NODE=%1
+bnu /c /l0:38400,8n1 /w0- /h0-
+cd \doors\pimpwars
+if exist c:\nodes\node%NODE%\door.sys copy c:\nodes\node%NODE%\door.sys c:\doors\pimpwars\door.sys > nul
+if exist c:\nodes\node%NODE%\DOOR.SYS copy c:\nodes\node%NODE%\DOOR.SYS c:\doors\pimpwars\DOOR.SYS > nul
+if exist c:\nodes\node%NODE%\dorinfo%NODE%.def copy c:\nodes\node%NODE%\dorinfo%NODE%.def c:\doors\pimpwars\dorinfo%NODE%.def > nul
+if exist c:\nodes\node%NODE%\dorinfo1.def copy c:\nodes\node%NODE%\dorinfo1.def c:\doors\pimpwars\dorinfo1.def > nul
+pimpwars.exe c:\nodes\node%NODE%\door.sys %NODE%
+exit
+EOF
+    chmod 755 "$BIN_DEST" 2>/dev/null || true
+  fi
+
+  chmod -R 777 "$DEST" 2>/dev/null || true
+  echo "    [SUCCESS] PimpWars installed to $DEST"
+}
+
 case "$TARGET" in
   usurper)
     install_usurper
@@ -119,13 +163,17 @@ case "$TARGET" in
   dredd|judgedredd)
     install_dredd
     ;;
+  pimpwars|pimp)
+    install_pimpwars
+    ;;
   all)
     install_usurper
     install_dredd
+    install_pimpwars
     ;;
   *)
     echo "Unknown door: $1"
-    echo "Usage: $0 [usurper | dredd | all]"
+    echo "Usage: $0 [usurper | dredd | pimpwars | all]"
     exit 1
     ;;
 esac

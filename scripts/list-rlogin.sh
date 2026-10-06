@@ -51,6 +51,9 @@ config.doors.forEach(door => {
   if (name === 'RUNMUD' || name === 'MUDCFG') {
     isInstalled = fs.existsSync(path.join(doorsDir, 'DOORMUD')) || fs.existsSync(path.join(doorsDir, 'doormud'));
   }
+  if (name === 'PIMP') {
+    isInstalled = fs.existsSync(path.join(doorsDir, 'PIMPWARS')) || fs.existsSync(path.join(doorsDir, 'pimpwars'));
+  }
 
   const statusStr = isInstalled ? `${green}● INSTALLED${reset}` : `${yellow}○ NOT INSTALLED${reset}`;
 
@@ -64,6 +67,7 @@ console.log(`    • Program Type:         ${bold}RLogin${reset}`);
 console.log(`    • Command Line:         ${bold}?rlogin -p 513 door-server %u <RLOGIN_NAME>${reset}`);
 console.log(`    • Example for Usurper:  ${cyan}?rlogin -p 513 door-server %u USURPER${reset}`);
 console.log(`    • Example for Dredd:    ${cyan}?rlogin -p 513 door-server %u DREDD${reset}`);
+console.log(`    • Example for PimpWars: ${cyan}?rlogin -p 513 door-server %u PIMPWARS${reset}`);
 console.log(`    • Example for TW2002:   ${cyan}?rlogin -p 513 door-server %u TW2002${reset}`);
 console.log(`    • Example for LORD:     ${cyan}?rlogin -p 513 door-server %u LORD${reset}`);
 console.log('');

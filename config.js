@@ -88,6 +88,18 @@ module.exports = {
     doorCmd: 'CALL dredd.bat',
     dropFileFormat: 'DoorSys',
     multiNode: true
+  },
+  {
+    name: 'PIMPWARS',
+    doorCmd: 'CALL pimpwars.bat',
+    dropFileFormat: 'DoorSys',
+    multiNode: true
+  },
+  {
+    name: 'PIMP',
+    doorCmd: 'CALL pimpwars.bat',
+    dropFileFormat: 'DoorSys',
+    multiNode: true
   }
   ]
 }
