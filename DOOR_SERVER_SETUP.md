@@ -2,6 +2,8 @@
 
 This document describes the architecture, internal data pipeline, patches, configuration parameters, and integration methods for the `door-server` container in this workspace.
 
+> For a step-by-step tutorial on adding new door games, see [HOW_TO_ADD_DOORS.md](../HOW_TO_ADD_DOORS.md).
+
 ---
 
 ## 1. Overview & High-Level Architecture
