@@ -9,4 +9,3 @@ if exist c:\nodes\node%NODE%\DOOR.SYS copy c:\nodes\node%NODE%\DOOR.SYS c:\doors
 if exist c:\nodes\node%NODE%\dorinfo%NODE%.def copy c:\nodes\node%NODE%\dorinfo%NODE%.def c:\doors\usurper\dorinfo%NODE%.def > nul
 if exist c:\nodes\node%NODE%\dorinfo1.def copy c:\nodes\node%NODE%\dorinfo1.def c:\doors\usurper\dorinfo1.def > nul
 usurper /N%NODE% /PC:\NODES\NODE%NODE%
-exit

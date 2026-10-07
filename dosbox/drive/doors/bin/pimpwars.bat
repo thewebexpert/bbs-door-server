@@ -9,4 +9,3 @@ if exist c:\nodes\node%NODE%\DOOR.SYS copy c:\nodes\node%NODE%\DOOR.SYS c:\doors
 if exist c:\nodes\node%NODE%\dorinfo%NODE%.def copy c:\nodes\node%NODE%\dorinfo%NODE%.def c:\doors\pimpwars\dorinfo%NODE%.def > nul
 if exist c:\nodes\node%NODE%\dorinfo1.def copy c:\nodes\node%NODE%\dorinfo1.def c:\doors\pimpwars\dorinfo1.def > nul
 pimpwars.exe c:\nodes\node%NODE%\door.sys %NODE%
-exit

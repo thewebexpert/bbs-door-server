@@ -11,4 +11,3 @@ if exist c:\nodes\node%NODE%\DORINFO1.DEF copy c:\nodes\node%NODE%\DORINFO1.DEF 
 if exist c:\nodes\node%NODE%\DOOR.SYS copy c:\nodes\node%NODE%\DOOR.SYS c:\doors\tw2002\DOOR.SYS > nul
 if exist c:\nodes\node%NODE%\door.sys copy c:\nodes\node%NODE%\door.sys c:\doors\tw2002\door.sys > nul
 tw2002.exe TWNODE=%NODE% SHARE
-exit

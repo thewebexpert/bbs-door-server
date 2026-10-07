@@ -9,4 +9,3 @@ if exist c:\nodes\node%NODE%\DOOR.SYS copy c:\nodes\node%NODE%\DOOR.SYS c:\doors
 if exist c:\nodes\node%NODE%\dorinfo%NODE%.def copy c:\nodes\node%NODE%\dorinfo%NODE%.def c:\doors\doormud\dorinfo%NODE%.def > nul
 if exist c:\nodes\node%NODE%\dorinfo1.def copy c:\nodes\node%NODE%\dorinfo1.def c:\doors\doormud\dorinfo1.def > nul
 dmud.exe -n %NODE% -d c:\nodes\node%NODE%
-exit

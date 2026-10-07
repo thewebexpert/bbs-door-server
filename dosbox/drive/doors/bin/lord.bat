@@ -9,4 +9,3 @@ if exist c:\nodes\node%NODE%\dorinfo1.def copy c:\nodes\node%NODE%\dorinfo1.def 
 if exist c:\nodes\node%NODE%\DORINFO%NODE%.DEF copy c:\nodes\node%NODE%\DORINFO%NODE%.DEF c:\doors\lord\DORINFO%NODE%.DEF > nul
 if exist c:\nodes\node%NODE%\DORINFO1.DEF copy c:\nodes\node%NODE%\DORINFO1.DEF c:\doors\lord\DORINFO1.DEF > nul
 call start.bat %NODE%
-exit
