@@ -13,4 +13,5 @@ MAINTOO.EXE
 OOII.EXE
 if exist oonode.dat del oonode.dat
 if exist OONODE.DAT del OONODE.DAT
+choice /c:yn /t:y,4 > nul
 exit
