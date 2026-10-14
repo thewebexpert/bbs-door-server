@@ -47,6 +47,12 @@ module.exports = {
     dropFileFormat: 'DorInfo'
   },
   {
+    name: 'FULLLORD',
+    doorCmd: 'CALL fulllord.bat',
+    multiNode: true,
+    dropFileFormat: 'DorInfo'
+  },
+  {
     name: 'TW2002',
     doorCmd: 'CALL tw2002.bat',
     dropFileFormat: 'DorInfo',

@@ -93,6 +93,14 @@ if [ -d "$DOORS_DIR/lord" ] || [ -d "$DOORS_DIR/LORD" ]; then
 XML
 fi
 
+if [ -d "$DOORS_DIR/fulllord" ] || [ -d "$DOORS_DIR/FULLLORD" ]; then
+  cat << "XML" >> "$MENU_FILE"
+  <item label="FULLLORD Configuration (LORDCFG)">
+    <action name="Execute"><command>dosbox -conf /app/dosbox/dosbox.conf -c "CD \doors\fulllord" -c "lordcfg.exe"</command></action>
+  </item>
+XML
+fi
+
 if [ -d "$DOORS_DIR/oo2" ] || [ -d "$DOORS_DIR/OO2" ]; then
   cat << "XML" >> "$MENU_FILE"
   <item label="Operation Overkill Setup (OOSETUP)">
